@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M3U Manager Pro</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div class="logo-container">
+                    <i class="fas fa-broadcast-tower logo-icon"></i>
+                    <div>
+                        <div class="logo">M3U Manager Pro</div>
+                        <div class="logo-subtitle">Gestión Profesional de Listas IPTV</div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon" title="Configuración">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button class="btn-icon" title="Ayuda">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-tv"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="totalChannels">0</div>
+                    <div class="stat-label">Canales Totales</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="totalGroups">0</div>
+                    <div class="stat-label">Grupos</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-image"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="workingChannels">0</div>
+                    <div class="stat-label">Con Logo</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-link"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="totalUrls">0</div>
+                    <div class="stat-label">URLs Únicas</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-box">
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('load', this)">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Cargar Lista</span>
+                </button>
+                <button class="nav-tab" onclick="showTab('add', this)">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Añadir Canal</span>
+                </button>
+                <button class="nav-tab" onclick="showTab('edit', this)">
+                    <i class="fas fa-cogs"></i>
+                    <span>Gestionar Canales</span>
+                </button>
+            </div>
+
+            <!-- Tab: Cargar Lista -->
+            <div id="load" class="tab-content active">
+                <div class="upload-area" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);"
+                    ondragleave="dragLeaveHandler(event);">
+                    <div class="upload-icon">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <h3 class="upload-title">Arrastra tu archivo M3U aquí</h3>
+                    <p class="upload-subtitle">o haz clic para seleccionar archivo</p>
+                    <input type="file" id="fileInput" accept=".m3u,.m3u8" style="display: none;"
+                        onchange="loadFile(event)">
+                    <button class="btn btn-primary btn-lg" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-folder-open"></i>
+                        Seleccionar Archivo M3U
+                    </button>
+                    <div class="upload-info">
+                        <i class="fas fa-info-circle"></i>
+                        Formatos soportados: .m3u, .m3u8
+                    </div>
+                </div>
+                <div id="fileInfo"></div>
+            </div>
+
+            <!-- Tab: Añadir Canal -->
+            <div id="add" class="tab-content">
+                <form class="form-grid" onsubmit="addChannel(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="channelName">
+                            <i class="fas fa-signature"></i>
+                            Nombre del Canal
+                        </label>
+                        <input type="text" class="form-control" id="channelName" placeholder="ej. CNN Internacional"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="channelGroup">
+                            <i class="fas fa-folder"></i>
+                            Grupo/Categoría
+                        </label>
+                        <input type="text" class="form-control" id="channelGroup" placeholder="ej. Noticias" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label" for="channelURL">
+                            <i class="fas fa-globe"></i>
+                            URL del Stream
+                        </label>
+                        <input type="url" class="form-control" id="channelURL"
+                            placeholder="https://ejemplo.com/stream.m3u8" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label" for="channelLogo">
+                            <i class="fas fa-image"></i>
+                            URL del Logo (Opcional)
+                        </label>
+                        <input type="url" class="form-control" id="channelLogo"
+                            placeholder="https://ejemplo.com/logo.png">
+                    </div>
+                    <div class="form-group full-width">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus-circle"></i>
+                            Añadir Canal
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tab: Gestionar Canales -->
+            <div id="edit" class="tab-content">
+                <div class="actions-section">
+                    <div class="action-group">
+                        <h4 class="group-title"><i class="fas fa-file-alt"></i> Archivos</h4>
+                        <div class="button-group">
+                            <button class="btn btn-secondary" onclick="importM3U()">
+                                <i class="fas fa-file-import"></i>
+                                Importar M3U
+                            </button>
+                            <button class="btn btn-secondary" onclick="exportM3U()">
+                                <i class="fas fa-file-export"></i>
+                                Exportar M3U
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="action-group">
+                        <h4 class="group-title"><i class="fas fa-edit"></i> Edición</h4>
+                        <div class="button-group">
+                            <button class="btn btn-secondary" onclick="openBulkEditor()">
+                                <i class="fas fa-tasks"></i>
+                                Edición Masiva
+                            </button>
+                            <button class="btn btn-secondary" onclick="sortChannels()">
+                                <i class="fas fa-sort-alpha-down"></i>
+                                Ordenar A-Z
+                            </button>
+                            <button class="btn btn-secondary" onclick="removeDuplicates()">
+                                <i class="fas fa-clone"></i>
+                                Eliminar Duplicados
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="action-group">
+                        <h4 class="group-title"><i class="fas fa-check-circle"></i> Verificación</h4>
+                        <div class="button-group">
+                            <button class="btn btn-secondary" onclick="verifyChannels()">
+                                <i class="fas fa-signal"></i>
+                                Verificar Canales
+                            </button>
+                            <button class="btn btn-secondary" onclick="removeDeadChannels()">
+                                <i class="fas fa-times-circle"></i>
+                                Eliminar Inactivos
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="action-group">
+                        <h4 class="group-title"><i class="fas fa-exclamation-triangle"></i> Sistema</h4>
+                        <div class="button-group">
+                            <button class="btn btn-secondary" onclick="restoreOriginalChannels()">
+                                <i class="fas fa-undo"></i>
+                                Restaurar Lista
+                            </button>
+                            <button class="btn btn-danger" onclick="clearAll()">
+                                <i class="fas fa-trash-alt"></i>
+                                Limpiar Todo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="content-box">
+            <div class="box-header">
+                <div class="box-title">
+                    <i class="fas fa-filter"></i>
+                    Filtros de Canales
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="filter-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="searchInput">
+                            <i class="fas fa-search"></i>
+                            Buscar Canal
+                        </label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-search input-icon"></i>
+                            <input type="search" class="form-control" id="searchInput"
+                                placeholder="Escribe el nombre del canal..." oninput="filterChannels()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="groupFilter">
+                            <i class="fas fa-layer-group"></i>
+                            Filtrar por Grupo
+                        </label>
+                        <select class="form-control" id="groupFilter" onchange="filterChannels()">
+                            <option value="">Todos los Grupos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="statusFilter">
+                            <i class="fas fa-signal"></i>
+                            Filtrar por Estado
+                        </label>
+                        <select class="form-control" id="statusFilter" onchange="filterByStatus(this.value)">
+                            <option value="all">Todos los Estados</option>
+                            <option value="live">Solo Activos</option>
+                            <option value="dead">Solo Inactivos</option>
+                            <option value="timeout">Solo Timeout</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-responsive">
+            <table class="table" id="channelTable">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-tv"></i> Nombre del Canal</th>
+                        <th><i class="fas fa-link"></i> URL del Stream</th>
+                        <th><i class="fas fa-image"></i> Logo</th>
+                        <th><i class="fas fa-folder"></i> Grupo</th>
+                        <th><i class="fas fa-tools"></i> Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <button class="btn btn-secondary" onclick="prevPage()">
+                <i class="fas fa-chevron-left"></i>
+                Anterior
+            </button>
+            <span class="page-info" id="pageInfo"></span>
+            <button class="btn btn-secondary" onclick="nextPage()">
+                Siguiente
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de Edición Masiva -->
+    <div id="bulkEditModal" class="bulk-edit-modal">
+        <div class="bulk-edit-content">
+            <!-- Encabezado -->
+            <div class="bulk-edit-header">
+                <h2>
+                    <i class="fas fa-clipboard-list"></i>
+                    Edición Masiva de Canales
+                </h2>
+                <button class="btn-close" onclick="closeBulkEditor()" title="Cerrar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Cuerpo del modal -->
+            <div class="bulk-edit-body">
+                <!-- Buscador integrado -->
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="search" id="bulkSearchInput" class="form-control search-input"
+                        placeholder="Buscar por nombre, grupo o URL...">
+                </div>
+
+                <!-- Barra de acciones -->
+                <div class="bulk-actions">
+                    <div class="bulk-actions-header">
+                        <span class="selected-count" id="selectedCount">
+                            <i class="fas fa-check-circle"></i>
+                            0 canales seleccionados
+                        </span>
+                        <div class="bulk-selection-buttons">
+                            <button class="btn btn-secondary btn-sm" onclick="selectAllBulkChannels()">
+                                <i class="fas fa-check-double"></i>
+                                Seleccionar Todos
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="deselectAllBulkChannels()">
+                                <i class="fas fa-times"></i>
+                                Deseleccionar Todos
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bulk-action-buttons">
+                        <button class="btn btn-primary" onclick="editSelectedChannels()">
+                            <i class="fas fa-edit"></i>
+                            Editar Seleccionados
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteBulkChannels()">
+                            <i class="fas fa-trash-alt"></i>
+                            Eliminar Seleccionados
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Grid de canales -->
+                <div id="bulkChannelsGrid" class="bulk-channels-grid"></div>
+
+                <!-- Mensaje cuando no hay resultados -->
+                <div id="bulkNoResults" class="no-results">
+                    <div class="no-results-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>No se encontraron canales</h3>
+                    <p>Intenta ajustar tu búsqueda o selecciona otro filtro</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/m3u.js"></script>
+    <script src="js/channels.js"></script>
+    <script src="js/verify.js"></script>
+    <script src="js/bulk.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/core.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
