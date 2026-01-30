@@ -14,14 +14,20 @@ document.addEventListener('DOMContentLoaded', () => {
         'VerifyManager',
         'BulkEditor',
         'UIManager',
-        'AppCore'
+        'AppCore',
+        'toast' // NUEVO: Verificar que toast esté cargado
     ];
 
     const missingModules = requiredModules.filter(module => !window[module]);
 
     if (missingModules.length > 0) {
         console.error('❌ Módulos faltantes:', missingModules);
-        alert('Error: No se pudieron cargar todos los módulos necesarios.\nMódulos faltantes: ' + missingModules.join(', '));
+        // CAMBIADO: Usar toast en lugar de alert
+        if (window.toast) {
+            toast.error('No se pudieron cargar todos los módulos necesarios: ' + missingModules.join(', '));
+        } else {
+            alert('Error: No se pudieron cargar todos los módulos necesarios.\nMódulos faltantes: ' + missingModules.join(', '));
+        }
         return;
     }
 
@@ -30,13 +36,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializar aplicación
     try {
         AppCore.init();
-        console.log('🎉 Aplicación iniciada exitosamente');
+
+        // NUEVO: Notificación de inicio exitoso
+        toast.success('¡Aplicación iniciada correctamente!', 2000);
 
         // Mensaje de bienvenida (opcional, comentar si no se desea)
         // showWelcomeMessage();
     } catch (error) {
         console.error('❌ Error al iniciar la aplicación:', error);
-        alert('Error al iniciar la aplicación. Revisa la consola para más detalles.');
+        // CAMBIADO: Usar toast en lugar de alert
+        toast.error('Error al iniciar la aplicación. Revisa la consola para más detalles.');
     }
 });
 
@@ -70,6 +79,9 @@ function showWelcomeMessage() {
                 confirmButtonText: '¡Entendido!',
                 confirmButtonColor: '#667eea',
                 width: '600px'
+            }).then(() => {
+                // NUEVO: Toast después de cerrar el welcome
+                toast.info('Arrastra un archivo M3U para comenzar', 3000);
             });
 
             localStorage.setItem('m3u_manager_welcome_seen', 'true');
@@ -89,6 +101,11 @@ window.addEventListener('error', (event) => {
         // Errores que se pueden ignorar
         return;
     }
+
+    // NUEVO: Notificar errores críticos con toast
+    if (event.error && event.error.message) {
+        toast.error('Se produjo un error. Revisa la consola.');
+    }
 });
 
 /**
@@ -97,6 +114,9 @@ window.addEventListener('error', (event) => {
 window.addEventListener('unhandledrejection', (event) => {
     console.error('💥 Promise rechazada:', event.reason);
     event.preventDefault(); // Prevenir que se muestre en consola por defecto
+
+    // NUEVO: Notificar con toast
+    toast.error('Error en operación asíncrona. Revisa la consola.');
 });
 
 /**
@@ -112,5 +132,10 @@ window.addEventListener('beforeunload', (event) => {
 });
 
 // Exponer versión para debugging
-window.M3U_MANAGER_VERSION = '2.0.0';
+window.M3U_MANAGER_VERSION = '2.0.1'; // NUEVO: Incrementar versión
 console.log(`📦 M3U Manager Pro v${window.M3U_MANAGER_VERSION}`);
+
+// NUEVO: Confirmar que toast está disponible
+if (window.toast) {
+    console.log('✅ Sistema de notificaciones Toast cargado');
+}

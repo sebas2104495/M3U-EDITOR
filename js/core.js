@@ -55,13 +55,7 @@ const AppCore = {
             UIManager.clearAddChannelForm();
             this.updateAll();
 
-            Swal.fire({
-                icon: 'success',
-                title: '✅ Canal agregado',
-                html: `El canal <b>${result.channel.name}</b> se agregó correctamente`,
-                confirmButtonText: 'Ok',
-                timer: 2000
-            });
+            toast.success(`Canal "${result.channel.name}" agregado correctamente`);
         } else {
             UIManager.showError('Error', result.message);
         }
@@ -97,10 +91,7 @@ const AppCore = {
      */
     async verifyChannels() {
         if (!this.isLoaded || this.channels.length === 0) {
-            UIManager.showInfo(
-                'Archivo no cargado',
-                'Por favor, carga un archivo M3U primero'
-            );
+            toast.warning('Por favor, carga un archivo M3U primero');
             return;
         }
 
@@ -157,12 +148,7 @@ const AppCore = {
      */
     restoreOriginalChannels() {
         if (!this.originalChannels || this.originalChannels.length === 0) {
-            Swal.fire({
-                icon: 'info',
-                title: 'No hay lista original',
-                text: 'No se ha cargado una lista original para restaurar.',
-                confirmButtonText: 'Ok'
-            });
+            toast.info('No se ha cargado una lista original para restaurar');
             return;
         }
 
@@ -185,13 +171,7 @@ const AppCore = {
 
                 this.updateAll();
 
-                Swal.fire({
-                    icon: 'success',
-                    title: '✅ Lista restaurada',
-                    text: 'Los canales se restauraron al estado original.',
-                    confirmButtonText: 'Ok',
-                    timer: 2000
-                });
+                toast.success('Lista restaurada al estado original');
             }
         });
     },
@@ -282,10 +262,7 @@ const AppCore = {
         const json = JSON.stringify(statsData, null, 2);
         utils.downloadFile(json, `stats_${Date.now()}.json`, 'application/json');
 
-        UIManager.showSuccess(
-            '📊 Estadísticas exportadas',
-            'El archivo JSON se descargó correctamente'
-        );
+        toast.success('Estadísticas exportadas correctamente');
     },
 
     /**
@@ -337,10 +314,7 @@ const AppCore = {
         const liveChannels = this.getChannelsByStatus('live');
 
         if (liveChannels.length === 0) {
-            UIManager.showInfo(
-                'Sin canales activos',
-                'No hay canales verificados como activos para exportar'
-            );
+            toast.warning('No hay canales verificados como activos para exportar');
             return;
         }
 
@@ -408,10 +382,7 @@ URLs Únicas: ${stats.uniqueUrls}
 
         utils.downloadFile(report, `Reporte_Completo_${Date.now()}.txt`);
 
-        UIManager.showSuccess(
-            '📋 Reporte generado',
-            'El reporte completo se descargó correctamente'
-        );
+        toast.success('Reporte completo generado y descargado');
     },
 
     /**
