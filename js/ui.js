@@ -107,14 +107,7 @@ const UIManager = {
         this.renderTable();
 
         if (window.app.filteredChannels.length === 0 && (searchText || groupFilter)) {
-            Swal.fire({
-                icon: 'info',
-                title: 'No se encontraron canales',
-                text: 'No hay canales que coincidan con los filtros aplicados.',
-                confirmButtonText: 'Ok',
-                timer: 2000,
-                showConfirmButton: false
-            });
+            toast.info('No hay canales que coincidan con los filtros aplicados');
         }
     },
 
@@ -371,13 +364,7 @@ const UIManager = {
         this.renderTable();
 
         if (window.app.filteredChannels.length === 0) {
-            Swal.fire({
-                icon: 'info',
-                title: 'Sin resultados',
-                text: `No hay canales con estado "${status}"`,
-                confirmButtonText: 'Ok',
-                timer: 2000
-            });
+            toast.info(`No hay canales con estado "${status}"`);
         }
     },
 
@@ -428,13 +415,7 @@ const UIManager = {
      * @param {string} text - Texto
      */
     showSuccess(title, text) {
-        Swal.fire({
-            icon: 'success',
-            title,
-            text,
-            confirmButtonText: 'Ok',
-            timer: 2000
-        });
+        toast.success(text || title);
     },
 
     /**
@@ -443,12 +424,7 @@ const UIManager = {
      * @param {string} text - Texto
      */
     showError(title, text) {
-        Swal.fire({
-            icon: 'error',
-            title,
-            text,
-            confirmButtonText: 'Ok'
-        });
+        toast.error(text || title);
     },
 
     /**
@@ -457,12 +433,7 @@ const UIManager = {
      * @param {string} text - Texto
      */
     showWarning(title, text) {
-        Swal.fire({
-            icon: 'warning',
-            title,
-            text,
-            confirmButtonText: 'Ok'
-        });
+        toast.warning(text || title);
     },
 
     /**
@@ -471,12 +442,7 @@ const UIManager = {
      * @param {string} text - Texto
      */
     showInfo(title, text) {
-        Swal.fire({
-            icon: 'info',
-            title,
-            text,
-            confirmButtonText: 'Ok'
-        });
+        toast.info(text || title);
     },
 
     /**

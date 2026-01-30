@@ -58,12 +58,7 @@ const ChannelManager = {
      */
     edit(index, channels) {
         if (index < 0 || index >= channels.length) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Canal no encontrado',
-                confirmButtonText: 'Ok'
-            });
+            toast.error('Canal no encontrado');
             return;
         }
 
@@ -159,12 +154,7 @@ const ChannelManager = {
                     tvgId: utils.generateTvgId(updates.name)
                 };
 
-                Swal.fire({
-                    icon: 'success',
-                    title: '✅ Canal actualizado',
-                    text: `"${updates.name}" se actualizó correctamente`,
-                    confirmButtonText: 'Ok'
-                });
+                toast.success(`Canal "${updates.name}" actualizado correctamente`);
 
                 return true;
             }
@@ -180,12 +170,7 @@ const ChannelManager = {
      */
     delete(index, channels, callback) {
         if (index < 0 || index >= channels.length) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Canal no encontrado',
-                confirmButtonText: 'Ok'
-            });
+            toast.error('Canal no encontrado');
             return;
         }
 
@@ -204,13 +189,7 @@ const ChannelManager = {
             if (result.isConfirmed) {
                 channels.splice(index, 1);
 
-                Swal.fire({
-                    icon: 'success',
-                    title: '✅ Canal eliminado',
-                    text: `"${channel.name}" ha sido eliminado`,
-                    confirmButtonText: 'Ok',
-                    timer: 2000
-                });
+                toast.success(`Canal "${channel.name}" eliminado`);
 
                 if (callback && typeof callback === 'function') {
                     callback();
@@ -232,22 +211,10 @@ const ChannelManager = {
         const channel = channels[index];
         navigator.clipboard.writeText(channel.url)
             .then(() => {
-                Swal.fire({
-                    icon: 'success',
-                    title: '📋 URL copiada',
-                    text: `URL de "${channel.name}" copiada al portapapeles`,
-                    confirmButtonText: 'Ok',
-                    timer: 2000,
-                    showConfirmButton: false
-                });
+                toast.success(`URL de "${channel.name}" copiada`);
             })
             .catch(() => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No se pudo copiar la URL',
-                    confirmButtonText: 'Ok'
-                });
+                toast.error('No se pudo copiar la URL');
             });
     },
 
@@ -263,25 +230,14 @@ const ChannelManager = {
         });
 
         if (isAlreadySorted) {
-            Swal.fire({
-                icon: 'info',
-                title: 'Ya ordenados',
-                text: 'Los canales ya están en orden alfabético',
-                confirmButtonText: 'Ok'
-            });
+            toast.info('Los canales ya están en orden alfabético');
             return false;
         }
 
         // Ordenar
         channels.sort((a, b) => a.name.localeCompare(b.name));
 
-        Swal.fire({
-            icon: 'success',
-            title: '✅ Canales ordenados',
-            text: 'Los canales están ahora en orden alfabético',
-            confirmButtonText: 'Ok',
-            timer: 2000
-        });
+        toast.success('Canales ordenados alfabéticamente');
 
         return true;
     },
@@ -305,12 +261,7 @@ const ChannelManager = {
         const removed = originalLength - unique.length;
 
         if (removed === 0) {
-            Swal.fire({
-                icon: 'info',
-                title: 'Sin duplicados',
-                text: 'No se encontraron canales duplicados',
-                confirmButtonText: 'Ok'
-            });
+            toast.info('No se encontraron canales duplicados');
             return 0;
         }
 
@@ -318,13 +269,7 @@ const ChannelManager = {
         channels.length = 0;
         channels.push(...unique);
 
-        Swal.fire({
-            icon: 'success',
-            title: '✅ Duplicados eliminados',
-            text: `Se eliminaron ${removed} canal(es) duplicado(s)`,
-            confirmButtonText: 'Ok'
-        });
-
+        toast.success(`Se eliminaron ${removed} canal(es) duplicado(s)`);
         return removed;
     },
 
@@ -372,12 +317,7 @@ const ChannelManager = {
      */
     clearAll(channels, callback) {
         if (channels.length === 0) {
-            Swal.fire({
-                icon: 'info',
-                title: 'Lista vacía',
-                text: 'No hay canales para eliminar',
-                confirmButtonText: 'Ok'
-            });
+            toast.info('No hay canales para eliminar');
             return;
         }
 
@@ -395,12 +335,7 @@ const ChannelManager = {
                 const count = channels.length;
                 channels.length = 0; // Limpiar array
 
-                Swal.fire({
-                    icon: 'success',
-                    title: '✅ Canales eliminados',
-                    text: `Se eliminaron ${count} canal(es)`,
-                    confirmButtonText: 'Ok'
-                });
+                toast.success(`Se eliminaron ${count} canal(es)`);
 
                 if (callback && typeof callback === 'function') {
                     callback();

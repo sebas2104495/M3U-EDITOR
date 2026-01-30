@@ -14,14 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
         'VerifyManager',
         'BulkEditor',
         'UIManager',
-        'AppCore',
-        'toast' // NUEVO: Verificar que toast esté cargado
+        'AppCore'
     ];
 
     const missingModules = requiredModules.filter(module => !window[module]);
 
     if (missingModules.length > 0) {
-        console.error('❌ Módulos faltantes:', missingModules);
+        console.error("❌ Módulos faltantes:", missingModules.join(", "));
+
         // CAMBIADO: Usar toast en lugar de alert
         if (window.toast) {
             toast.error('No se pudieron cargar todos los módulos necesarios: ' + missingModules.join(', '));
