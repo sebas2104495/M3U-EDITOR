@@ -328,10 +328,7 @@ Este proyecto está bajo la **Licencia MIT** - mira el archivo [LICENSE](LICENSE
 
 ¿Preguntas? ¿Sugerencias? ¿Simplemente quieres saludar?
 
-- 📧 Email: [tu-email@ejemplo.com](mailto:tu-email@ejemplo.com)
-- 💼 LinkedIn: [Sebastian Martinez](https://linkedin.com/in/tu-perfil)
-- 🐦 Twitter: [@smtzcode](https://twitter.com/smtzcode)
-
+- 📧 Email: sekjac22@gmail.com
 ---
 
 ## 🙏 Agradecimientos
